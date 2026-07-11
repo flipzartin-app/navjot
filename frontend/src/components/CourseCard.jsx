@@ -31,8 +31,8 @@ const CourseCard = ({ course, onWishlistToggle, isWishlisted }) => {
 
         <div className="mt-auto pt-3 flex items-center justify-between">
           <div>
-            <span className="font-bold text-lg">${finalPrice}</span>
-            {hasDiscount && <span className="text-gray-400 line-through text-sm ml-2">${course.price}</span>}
+            <span className="font-bold text-lg">₹{finalPrice}</span>
+            {hasDiscount && <span className="text-gray-400 line-through text-sm ml-2">₹{course.price}</span>}
           </div>
           <div className="flex gap-2">
             {onWishlistToggle && (
