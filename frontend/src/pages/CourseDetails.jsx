@@ -18,10 +18,10 @@ const CourseDetails = () => {
   useEffect(() => {
     setLoading(true);
     api
-      .get(`/courses/${slug}`)
+      .get(`/courses/₹{slug}`)
       .then((res) => {
         setCourse(res.data);
-        return api.get(`/reviews/${res.data._id}`);
+        return api.get(`/reviews/₹{res.data._id}`);
       })
       .then((res) => setReviews(res.data))
       .catch(() => toast.error('Course not found'))
@@ -62,11 +62,11 @@ const CourseDetails = () => {
               {course.thumbnail && <img src={course.thumbnail} alt={course.title} className="w-full h-full object-cover" />}
             </div>
             <div className="flex items-baseline gap-2 mb-4">
-              <span className="text-2xl font-bold">${finalPrice}</span>
-              {course.discountPrice > 0 && <span className="line-through text-gray-400">${course.price}</span>}
+              <span className="text-2xl font-bold">₹{finalPrice}</span>
+              {course.discountPrice > 0 && <span className="line-through text-gray-400">₹{course.price}</span>}
             </div>
             {course.isEnrolled ? (
-              <Link to={`/watch/${course.slug}`} className="btn-primary w-full text-center block">Go to Course</Link>
+              <Link to={`/watch/₹{course.slug}`} className="btn-primary w-full text-center block">Go to Course</Link>
             ) : (
               <div className="space-y-2">
                 <button onClick={() => addToCart(course)} className="btn-primary w-full">Add to Cart</button>
