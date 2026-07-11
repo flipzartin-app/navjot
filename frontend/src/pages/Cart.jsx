@@ -38,7 +38,7 @@ const Cart = () => {
                       <p className="font-medium line-clamp-1">{course.title}</p>
                       <p className="text-sm text-gray-500">{course.instructor?.name}</p>
                     </div>
-                    <span className="font-bold">${finalPrice}</span>
+                    <span className="font-bold">₹{finalPrice}</span>
                     <button onClick={() => removeFromCart(course._id)} className="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg">
                       <FiTrash2 />
                     </button>
@@ -49,11 +49,11 @@ const Cart = () => {
             <div className="card p-6 h-fit">
               <div className="flex justify-between mb-2">
                 <span>Subtotal</span>
-                <span className="font-medium">${total.toFixed(2)}</span>
+                <span className="font-medium">₹{total.toFixed(2)}</span>
               </div>
               <div className="flex justify-between text-lg font-bold border-t border-gray-200 dark:border-gray-800 pt-3 mt-3">
                 <span>Total</span>
-                <span>${total.toFixed(2)}</span>
+                <span>₹{total.toFixed(2)}</span>
               </div>
               <button onClick={handleCheckout} className="btn-primary w-full mt-6">Proceed to Checkout</button>
             </div>
