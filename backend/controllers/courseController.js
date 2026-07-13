@@ -201,8 +201,9 @@ const incrementLessonView = asyncHandler(async (req, res) => {
   }
 
   lesson.views = (lesson.views || 0) + 1;
+  course.totalViews = (course.totalViews || 0) + 1;
   await course.save();
-  res.json({ views: lesson.views });
+  res.json({ views: lesson.views, totalViews: course.totalViews });
 });
 
 module.exports = {
