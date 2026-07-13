@@ -7,6 +7,7 @@ const lessonSchema = new mongoose.Schema({
   duration: { type: Number, default: 0 }, // seconds
   isPreview: { type: Boolean, default: false }, // free preview lesson
   order: { type: Number, default: 0 },
+  views: { type: Number, default: 0 },
 });
 
 const sectionSchema = new mongoose.Schema({
@@ -30,6 +31,7 @@ const courseSchema = new mongoose.Schema(
     ratingAverage: { type: Number, default: 0 },
     ratingCount: { type: Number, default: 0 },
     studentsCount: { type: Number, default: 0 },
+    totalViews: { type: Number, default: 0 },
     isPublished: { type: Boolean, default: false },
     isApproved: { type: Boolean, default: false }, // admin approval gate
   },
