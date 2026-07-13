@@ -9,6 +9,7 @@ const {
   addSection,
   getMyInstructorCourses,
   getCategories,
+  incrementLessonView,
 } = require('../controllers/courseController');
 const { protect, optionalAuth } = require('../middleware/auth');
 const { authorize } = require('../middleware/role');
@@ -26,5 +27,6 @@ router.post('/:id/sections', protect, authorize('instructor', 'admin'), addSecti
 
 // Public (must be after /instructor/mine and /categories/list to avoid slug collision)
 router.get('/:slug', optionalAuth, getCourseBySlug);
+router.post('/:id/lessons/:lessonId/view', incrementLessonView);
 
 module.exports = router;
