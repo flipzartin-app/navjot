@@ -181,6 +181,30 @@ const getCategories = asyncHandler(async (req, res) => {
   res.json(categories);
 });
 
+// @desc Increment a lesson's view count (public - no auth required, matches public preview access)
+// @route POST /api/courses/:id/lessons/:lessonId/view
+const incrementLessonView = asyncHandler(async (req, res) => {
+  const course = await Course.findById(req.params.id);
+  if (!course) {
+    res.status(404);
+    throw new Error('Course not found');
+  }
+
+  let lesson = null;
+  for (const section of course.sections) {
+    lesson = section.lessons.id(req.params.lessonId);
+    if (lesson) break;
+  }
+  if (!lesson) {
+    res.status(404);
+    throw new Error('Lesson not found');
+  }
+
+  lesson.views = (lesson.views || 0) + 1;
+  await course.save();
+  res.json({ views: lesson.views });
+});
+
 module.exports = {
   getCourses,
   getCourseBySlug,
@@ -190,4 +214,5 @@ module.exports = {
   addSection,
   getMyInstructorCourses,
   getCategories,
+  incrementLessonView,
 };
