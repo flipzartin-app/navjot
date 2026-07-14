@@ -10,7 +10,9 @@ const orderSchema = new mongoose.Schema(
       },
     ],
     totalAmount: { type: Number, required: true },
-    currency: { type: String, default: 'usd' },
+    currency: { type: String, default: 'inr' },
+    couponCode: { type: String, default: null },
+    discountAmount: { type: Number, default: 0 },
     paymentProvider: { type: String, enum: ['stripe', 'razorpay'], required: true },
     paymentId: { type: String }, // stripe payment_intent id or razorpay payment id
     orderRef: { type: String }, // razorpay order id / stripe session id
