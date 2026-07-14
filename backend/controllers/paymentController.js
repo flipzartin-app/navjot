@@ -5,6 +5,9 @@ const crypto = require('crypto');
 const Order = require('../models/Order');
 const Course = require('../models/Course');
 const User = require('../models/User');
+const Coupon = require('../models/Coupon');
+const { computeCartTotal } = require('../utils/cartUtils');
+const { validateCouponForCart } = require('./couponController');
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '');
 const razorpay = new Razorpay({
@@ -12,20 +15,10 @@ const razorpay = new Razorpay({
   key_secret: process.env.RAZORPAY_KEY_SECRET || '',
 });
 
-const computeCartTotal = async (courseIds) => {
-  const courses = await Course.find({ _id: { $in: courseIds } });
-  if (courses.length !== courseIds.length) {
-    throw new Error('One or more courses in cart no longer exist');
-  }
-  const items = courses.map((c) => ({ course: c._id, price: c.discountPrice > 0 ? c.discountPrice : c.price }));
-  const total = items.reduce((sum, i) => sum + i.price, 0);
-  return { items, total, courses };
-};
-
 // @desc Create a Stripe Checkout session
 // @route POST /api/payments/stripe/checkout
 const createStripeCheckout = asyncHandler(async (req, res) => {
-  const { courseIds } = req.body;
+  const { courseIds, couponCode } = req.body;
   if (!courseIds || !courseIds.length) {
     res.status(400);
     throw new Error('Cart is empty');
@@ -33,25 +26,56 @@ const createStripeCheckout = asyncHandler(async (req, res) => {
 
   const { items, total, courses } = await computeCartTotal(courseIds);
 
+  let discount = 0;
+  let finalTotal = total;
+  let appliedCode = null;
+  if (couponCode) {
+    const result = await validateCouponForCart(couponCode, total); // throws if invalid - never trust client-side discount
+    discount = result.discount;
+    finalTotal = result.finalTotal;
+    appliedCode = result.coupon.code;
+  }
+
   const order = await Order.create({
     user: req.user._id,
     courses: items,
-    totalAmount: total,
+    totalAmount: finalTotal,
+    currency: 'inr',
+    couponCode: appliedCode,
+    discountAmount: discount,
     paymentProvider: 'stripe',
     status: 'pending',
   });
 
+  // With no coupon, show a clean per-course line item breakdown.
+  // With a coupon, Stripe has no simple way to apply an arbitrary discount across multiple
+  // line items without creating a separate Stripe Coupon object - so instead we charge a single
+  // line item for the already-discounted total. The itemized breakdown still lives in our own
+  // Order record for receipts/admin visibility.
+  const lineItems = appliedCode
+    ? [
+        {
+          price_data: {
+            currency: 'inr',
+            product_data: { name: `${courses.length} course${courses.length > 1 ? 's' : ''} (coupon ${appliedCode} applied)` },
+            unit_amount: Math.round(finalTotal * 100),
+          },
+          quantity: 1,
+        },
+      ]
+    : courses.map((c) => ({
+        price_data: {
+          currency: 'inr',
+          product_data: { name: c.title },
+          unit_amount: Math.round((c.discountPrice > 0 ? c.discountPrice : c.price) * 100),
+        },
+        quantity: 1,
+      }));
+
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ['card'],
     mode: 'payment',
-    line_items: courses.map((c) => ({
-      price_data: {
-        currency: 'usd',
-        product_data: { name: c.title },
-        unit_amount: Math.round((c.discountPrice > 0 ? c.discountPrice : c.price) * 100),
-      },
-      quantity: 1,
-    })),
+    line_items: lineItems,
     success_url: `${process.env.CLIENT_URL}/checkout/success?order=${order._id}`,
     cancel_url: `${process.env.CLIENT_URL}/checkout?canceled=1`,
     metadata: { orderId: order._id.toString(), userId: req.user._id.toString() },
@@ -93,7 +117,7 @@ const stripeWebhook = asyncHandler(async (req, res) => {
 // @desc Create a Razorpay order
 // @route POST /api/payments/razorpay/order
 const createRazorpayOrder = asyncHandler(async (req, res) => {
-  const { courseIds } = req.body;
+  const { courseIds, couponCode } = req.body;
   if (!courseIds || !courseIds.length) {
     res.status(400);
     throw new Error('Cart is empty');
@@ -101,17 +125,29 @@ const createRazorpayOrder = asyncHandler(async (req, res) => {
 
   const { items, total } = await computeCartTotal(courseIds);
 
+  let discount = 0;
+  let finalTotal = total;
+  let appliedCode = null;
+  if (couponCode) {
+    const result = await validateCouponForCart(couponCode, total); // throws if invalid
+    discount = result.discount;
+    finalTotal = result.finalTotal;
+    appliedCode = result.coupon.code;
+  }
+
   const order = await Order.create({
     user: req.user._id,
     courses: items,
-    totalAmount: total,
+    totalAmount: finalTotal,
     currency: 'inr',
+    couponCode: appliedCode,
+    discountAmount: discount,
     paymentProvider: 'razorpay',
     status: 'pending',
   });
 
   const razorpayOrder = await razorpay.orders.create({
-    amount: Math.round(total * 100), // paise
+    amount: Math.round(finalTotal * 100), // paise
     currency: 'INR',
     receipt: order._id.toString(),
   });
@@ -158,7 +194,7 @@ const verifyRazorpayPayment = asyncHandler(async (req, res) => {
   res.json({ message: 'Payment verified, enrollment complete', order });
 });
 
-// Shared helper: enroll user in all courses from a paid order
+// Shared helper: enroll user in all courses from a paid order, and record the coupon use if any
 async function enrollUserInOrderCourses(order) {
   const user = await User.findById(order.user);
   order.courses.forEach(({ course }) => {
@@ -170,6 +206,10 @@ async function enrollUserInOrderCourses(order) {
     { _id: { $in: order.courses.map((c) => c.course) } },
     { $inc: { studentsCount: 1 } }
   );
+
+  if (order.couponCode) {
+    await Coupon.updateOne({ code: order.couponCode }, { $inc: { usedCount: 1 } });
+  }
 }
 
 // @desc Get order status (used for Stripe success page polling, since webhook is async)
