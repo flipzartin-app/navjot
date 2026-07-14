@@ -52,6 +52,26 @@ const validateCoupon = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc List currently valid coupons (active, not expired, not maxed out) for display at checkout
+// @route GET /api/coupons/active
+const getActiveCoupons = asyncHandler(async (req, res) => {
+  const coupons = await Coupon.find({
+    isActive: true,
+    $or: [{ expiresAt: null }, { expiresAt: { $gt: new Date() } }],
+  }).select('code discountType discountValue minPurchaseAmount maxUses usedCount');
+
+  // Filter out maxed-out coupons in code, since "not yet reached max uses" needs a field comparison
+  // Mongoose can't easily express in a single query ($expr works but this is clearer and coupons lists are small).
+  const available = coupons.filter((c) => c.maxUses === null || c.usedCount < c.maxUses);
+
+  res.json(available.map((c) => ({
+    code: c.code,
+    discountType: c.discountType,
+    discountValue: c.discountValue,
+    minPurchaseAmount: c.minPurchaseAmount,
+  })));
+});
+
 // @desc Create a coupon (admin only)
 // @route POST /api/admin/coupons
 const createCoupon = asyncHandler(async (req, res) => {
@@ -120,6 +140,7 @@ const deleteCoupon = asyncHandler(async (req, res) => {
 module.exports = {
   validateCoupon,
   validateCouponForCart,
+  getActiveCoupons,
   createCoupon,
   getAllCoupons,
   toggleCoupon,
