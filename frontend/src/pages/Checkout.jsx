@@ -2,7 +2,10 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import toast from 'react-hot-toast';
+<<<<<<< HEAD
 import { FiCopy } from 'react-icons/fi';
+=======
+>>>>>>> c0a128aeb558892a02210138ef7def36a76fab87
 import api from '../services/api';
 import { useCart } from '../context/CartContext';
 
@@ -20,10 +23,13 @@ const loadRazorpayScript = () =>
 const Checkout = () => {
   const { cart, total, clearCart } = useCart();
   const [processing, setProcessing] = useState(false);
+<<<<<<< HEAD
   const [couponInput, setCouponInput] = useState('');
   const [appliedCoupon, setAppliedCoupon] = useState(null); // { code, discount, finalTotal }
   const [applyingCoupon, setApplyingCoupon] = useState(false);
   const [availableCoupons, setAvailableCoupons] = useState([]);
+=======
+>>>>>>> c0a128aeb558892a02210138ef7def36a76fab87
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
@@ -31,6 +37,7 @@ const Checkout = () => {
     if (searchParams.get('canceled')) toast.error('Payment canceled');
   }, [searchParams]);
 
+<<<<<<< HEAD
   useEffect(() => {
     api.get('/coupons/active').then((res) => setAvailableCoupons(res.data)).catch(() => {});
   }, []);
@@ -62,14 +69,20 @@ const Checkout = () => {
     setCouponInput('');
   };
 
+=======
+>>>>>>> c0a128aeb558892a02210138ef7def36a76fab87
   const payWithStripe = async () => {
     setProcessing(true);
     try {
       const courseIds = cart.map((c) => c._id);
+<<<<<<< HEAD
       const { data } = await api.post('/payments/stripe/checkout', {
         courseIds,
         couponCode: appliedCoupon?.code || undefined,
       });
+=======
+      const { data } = await api.post('/payments/stripe/checkout', { courseIds });
+>>>>>>> c0a128aeb558892a02210138ef7def36a76fab87
       window.location.href = data.url; // redirect to Stripe Checkout
     } catch (err) {
       toast.error(err.response?.data?.message || 'Stripe checkout failed');
@@ -87,10 +100,14 @@ const Checkout = () => {
         return;
       }
       const courseIds = cart.map((c) => c._id);
+<<<<<<< HEAD
       const { data } = await api.post('/payments/razorpay/order', {
         courseIds,
         couponCode: appliedCoupon?.code || undefined,
       });
+=======
+      const { data } = await api.post('/payments/razorpay/order', { courseIds });
+>>>>>>> c0a128aeb558892a02210138ef7def36a76fab87
 
       const options = {
         key: data.keyId,
@@ -140,11 +157,16 @@ const Checkout = () => {
           {cart.map((c) => (
             <div key={c._id} className="flex justify-between text-sm py-1.5">
               <span className="line-clamp-1">{c.title}</span>
+<<<<<<< HEAD
               <span>₹{c.discountPrice > 0 ? c.discountPrice : c.price}</span>
+=======
+              <span>${c.discountPrice > 0 ? c.discountPrice : c.price}</span>
+>>>>>>> c0a128aeb558892a02210138ef7def36a76fab87
             </div>
           ))}
           <div className="flex justify-between font-bold border-t border-gray-200 dark:border-gray-800 pt-3 mt-3">
             <span>Total</span>
+<<<<<<< HEAD
             <span>₹{total.toFixed(2)}</span>
           </div>
 
@@ -198,6 +220,10 @@ const Checkout = () => {
               )}
             </div>
           )}
+=======
+            <span>${total.toFixed(2)}</span>
+          </div>
+>>>>>>> c0a128aeb558892a02210138ef7def36a76fab87
         </div>
 
         <div className="card p-6 space-y-3">

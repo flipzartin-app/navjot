@@ -3,22 +3,31 @@ import { Helmet } from 'react-helmet-async';
 import toast from 'react-hot-toast';
 import api from '../services/api';
 
+<<<<<<< HEAD
 const emptyCouponForm = { code: '', discountType: 'percentage', discountValue: '', maxUses: '', minPurchaseAmount: '', expiresAt: '' };
 
+=======
+>>>>>>> c0a128aeb558892a02210138ef7def36a76fab87
 const AdminPanel = () => {
   const [stats, setStats] = useState(null);
   const [users, setUsers] = useState([]);
   const [pendingCourses, setPendingCourses] = useState([]);
+<<<<<<< HEAD
   const [coupons, setCoupons] = useState([]);
   const [couponForm, setCouponForm] = useState(emptyCouponForm);
   const [creatingCoupon, setCreatingCoupon] = useState(false);
+=======
+>>>>>>> c0a128aeb558892a02210138ef7def36a76fab87
   const [tab, setTab] = useState('overview');
 
   const loadAll = () => {
     api.get('/admin/stats').then((res) => setStats(res.data));
     api.get('/admin/users').then((res) => setUsers(res.data));
     api.get('/admin/courses/pending').then((res) => setPendingCourses(res.data));
+<<<<<<< HEAD
     api.get('/admin/coupons').then((res) => setCoupons(res.data));
+=======
+>>>>>>> c0a128aeb558892a02210138ef7def36a76fab87
   };
 
   useEffect(() => { loadAll(); }, []);
@@ -29,6 +38,7 @@ const AdminPanel = () => {
     loadAll();
   };
 
+<<<<<<< HEAD
   const [resetPasswordUserId, setResetPasswordUserId] = useState(null);
   const [newPasswordInput, setNewPasswordInput] = useState('');
   const [resettingPassword, setResettingPassword] = useState(false);
@@ -51,12 +61,15 @@ const AdminPanel = () => {
     }
   };
 
+=======
+>>>>>>> c0a128aeb558892a02210138ef7def36a76fab87
   const handleApprove = async (id) => {
     await api.put(`/admin/courses/${id}/approve`);
     toast.success('Course approved and now live');
     loadAll();
   };
 
+<<<<<<< HEAD
   const handleCreateCoupon = async (e) => {
     e.preventDefault();
     if (!couponForm.code.trim() || !couponForm.discountValue) {
@@ -95,6 +108,8 @@ const AdminPanel = () => {
     loadAll();
   };
 
+=======
+>>>>>>> c0a128aeb558892a02210138ef7def36a76fab87
   return (
     <>
       <Helmet><title>Admin Panel - EduStream</title></Helmet>
@@ -105,11 +120,19 @@ const AdminPanel = () => {
           <div className="card p-5"><p className="text-2xl font-bold">{stats?.userCount ?? '-'}</p><p className="text-sm text-gray-500">Students</p></div>
           <div className="card p-5"><p className="text-2xl font-bold">{stats?.instructorCount ?? '-'}</p><p className="text-sm text-gray-500">Instructors</p></div>
           <div className="card p-5"><p className="text-2xl font-bold">{stats?.courseCount ?? '-'}</p><p className="text-sm text-gray-500">Total Courses</p></div>
+<<<<<<< HEAD
           <div className="card p-5"><p className="text-2xl font-bold">₹{stats?.totalRevenue?.toFixed(2) ?? '0.00'}</p><p className="text-sm text-gray-500">Revenue</p></div>
         </div>
 
         <div className="flex gap-2 mb-6 border-b border-gray-200 dark:border-gray-800">
           {['overview', 'users', 'courses', 'coupons'].map((t) => (
+=======
+          <div className="card p-5"><p className="text-2xl font-bold">${stats?.totalRevenue?.toFixed(2) ?? '0.00'}</p><p className="text-sm text-gray-500">Revenue</p></div>
+        </div>
+
+        <div className="flex gap-2 mb-6 border-b border-gray-200 dark:border-gray-800">
+          {['overview', 'users', 'courses'].map((t) => (
+>>>>>>> c0a128aeb558892a02210138ef7def36a76fab87
             <button key={t} onClick={() => setTab(t)} className={`px-4 py-2 text-sm font-medium capitalize ${tab === t ? 'border-b-2 border-primary-600 text-primary-600' : 'text-gray-500'}`}>
               {t}
             </button>
@@ -123,6 +146,7 @@ const AdminPanel = () => {
         {tab === 'users' && (
           <div className="space-y-2">
             {users.map((u) => (
+<<<<<<< HEAD
               <div key={u._id} className="card p-4">
                 <div className="flex items-center justify-between">
                   <div>
@@ -163,6 +187,16 @@ const AdminPanel = () => {
                     </button>
                   </div>
                 )}
+=======
+              <div key={u._id} className="card p-4 flex items-center justify-between">
+                <div>
+                  <p className="font-medium">{u.name} <span className="text-xs text-gray-400">({u.role})</span></p>
+                  <p className="text-xs text-gray-500">{u.email}</p>
+                </div>
+                <button onClick={() => handleBan(u._id)} className={`text-xs font-medium px-3 py-1.5 rounded-lg ${u.isBanned ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                  {u.isBanned ? 'Unban' : 'Ban'}
+                </button>
+>>>>>>> c0a128aeb558892a02210138ef7def36a76fab87
               </div>
             ))}
           </div>
@@ -182,6 +216,7 @@ const AdminPanel = () => {
             ))}
           </div>
         )}
+<<<<<<< HEAD
 
         {tab === 'coupons' && (
           <div className="grid md:grid-cols-3 gap-6">
@@ -272,6 +307,8 @@ const AdminPanel = () => {
             </div>
           </div>
         )}
+=======
+>>>>>>> c0a128aeb558892a02210138ef7def36a76fab87
       </div>
     </>
   );

@@ -5,7 +5,10 @@ import toast from 'react-hot-toast';
 import { FiCheckCircle, FiCircle, FiAward } from 'react-icons/fi';
 import api from '../services/api';
 import VideoPlayer from '../components/VideoPlayer';
+<<<<<<< HEAD
 import { formatViews } from '../services/formatViews';
+=======
+>>>>>>> c0a128aeb558892a02210138ef7def36a76fab87
 
 const WatchVideo = () => {
   const { slug } = useParams();
@@ -39,6 +42,7 @@ const WatchVideo = () => {
     }
   };
 
+<<<<<<< HEAD
   const markView = async () => {
     if (!activeLesson?._id || !course) return;
     try {
@@ -49,6 +53,8 @@ const WatchVideo = () => {
     }
   };
 
+=======
+>>>>>>> c0a128aeb558892a02210138ef7def36a76fab87
   const claimCertificate = async () => {
     try {
       const { data } = await api.post(`/certificates/${course._id}`);
@@ -68,11 +74,16 @@ const WatchVideo = () => {
       <Helmet><title>Watch: {course.title} - EduStream</title></Helmet>
       <div className="max-w-7xl mx-auto px-4 py-8 grid md:grid-cols-3 gap-8">
         <div className="md:col-span-2 space-y-4">
+<<<<<<< HEAD
           <VideoPlayer key={activeLesson?._id} src={activeLesson?.videoUrl} onComplete={markComplete} onPlay={markView} />
           <div className="flex items-center justify-between">
             <h1 className="text-xl font-bold">{activeLesson?.title || course.title}</h1>
             <span className="text-xs text-gray-500 shrink-0">{formatViews(activeLesson?.views)}</span>
           </div>
+=======
+          <VideoPlayer src={activeLesson?.videoUrl} onComplete={markComplete} />
+          <h1 className="text-xl font-bold">{activeLesson?.title || course.title}</h1>
+>>>>>>> c0a128aeb558892a02210138ef7def36a76fab87
           <div className="card p-4">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm font-medium">Your progress</span>

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import toast from 'react-hot-toast';
+<<<<<<< HEAD
 import { FiStar, FiLock, FiPlayCircle, FiCheckCircle, FiHeart } from 'react-icons/fi';
 import api from '../services/api';
 import { useCart } from '../context/CartContext';
@@ -9,6 +10,12 @@ import { useAuth } from '../context/AuthContext';
 import { useWishlist } from '../hooks/useWishlist';
 import VideoPlayer from '../components/VideoPlayer';
 import { formatViews } from '../services/formatViews';
+=======
+import { FiStar, FiLock, FiPlayCircle, FiCheckCircle } from 'react-icons/fi';
+import api from '../services/api';
+import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
+>>>>>>> c0a128aeb558892a02210138ef7def36a76fab87
 
 const CourseDetails = () => {
   const { slug } = useParams();
@@ -16,26 +23,38 @@ const CourseDetails = () => {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const { addToCart } = useCart();
+<<<<<<< HEAD
   const { isAuthenticated, user } = useAuth();
   const { wishlistIds, toggle } = useWishlist();
   const [myRating, setMyRating] = useState(0);
   const [myComment, setMyComment] = useState('');
   const [submittingReview, setSubmittingReview] = useState(false);
   const [previewLesson, setPreviewLesson] = useState(null);
+=======
+  const { isAuthenticated } = useAuth();
+>>>>>>> c0a128aeb558892a02210138ef7def36a76fab87
 
   useEffect(() => {
     setLoading(true);
     api
+<<<<<<< HEAD
       .get(`/courses/${slug}`)
       .then((res) => {
         setCourse(res.data);
         return api.get(`/reviews/${res.data._id}`);
+=======
+      .get(`/courses/₹{slug}`)
+      .then((res) => {
+        setCourse(res.data);
+        return api.get(`/reviews/₹{res.data._id}`);
+>>>>>>> c0a128aeb558892a02210138ef7def36a76fab87
       })
       .then((res) => setReviews(res.data))
       .catch(() => toast.error('Course not found'))
       .finally(() => setLoading(false));
   }, [slug]);
 
+<<<<<<< HEAD
   const markPreviewView = async () => {
     if (!previewLesson?._id || !course) return;
     try {
@@ -75,6 +94,8 @@ const CourseDetails = () => {
     }
   }, [reviews, user]);
 
+=======
+>>>>>>> c0a128aeb558892a02210138ef7def36a76fab87
   if (loading) return <div className="text-center py-20">Loading...</div>;
   if (!course) return <div className="text-center py-20">Course not found.</div>;
 
@@ -113,6 +134,7 @@ const CourseDetails = () => {
               {course.discountPrice > 0 && <span className="line-through text-gray-400">₹{course.price}</span>}
             </div>
             {course.isEnrolled ? (
+<<<<<<< HEAD
               <Link to={`/watch/${course.slug}`} className="btn-primary w-full text-center block">Go to Course</Link>
             ) : (
               <div className="space-y-2">
@@ -126,6 +148,12 @@ const CourseDetails = () => {
                     <FiHeart className={wishlistIds.has(course._id) ? 'fill-red-500 text-red-500' : ''} />
                   </button>
                 </div>
+=======
+              <Link to={`/watch/₹{course.slug}`} className="btn-primary w-full text-center block">Go to Course</Link>
+            ) : (
+              <div className="space-y-2">
+                <button onClick={() => addToCart(course)} className="btn-primary w-full">Add to Cart</button>
+>>>>>>> c0a128aeb558892a02210138ef7def36a76fab87
                 <Link to="/cart" className="btn-secondary w-full text-center block">Buy Now</Link>
               </div>
             )}
@@ -142,6 +170,7 @@ const CourseDetails = () => {
               <div key={sIdx} className="card p-4">
                 <h3 className="font-semibold mb-2">{section.title}</h3>
                 <ul className="space-y-1">
+<<<<<<< HEAD
                   {section.lessons.map((lesson, lIdx) => {
                     const isPlayable = lesson.isPreview && lesson.videoUrl;
                     return (
@@ -163,6 +192,17 @@ const CourseDetails = () => {
                       </li>
                     );
                   })}
+=======
+                  {section.lessons.map((lesson, lIdx) => (
+                    <li key={lIdx} className="flex items-center justify-between text-sm py-1.5 border-t border-gray-100 dark:border-gray-800 first:border-t-0">
+                      <span className="flex items-center gap-2">
+                        {lesson.videoUrl || lesson.isPreview ? <FiPlayCircle className="text-primary-600" /> : <FiLock className="text-gray-400" />}
+                        {lesson.title}
+                      </span>
+                      {lesson.isPreview && <span className="text-xs text-primary-600 font-medium">Preview</span>}
+                    </li>
+                  ))}
+>>>>>>> c0a128aeb558892a02210138ef7def36a76fab87
                 </ul>
               </div>
             ))}
@@ -172,6 +212,7 @@ const CourseDetails = () => {
           </div>
 
           <h2 className="text-xl font-bold mt-10 mb-4">Reviews ({reviews.length})</h2>
+<<<<<<< HEAD
 
           {isAuthenticated ? (
             <div className="card p-4 mb-4">
@@ -202,6 +243,8 @@ const CourseDetails = () => {
             </p>
           )}
 
+=======
+>>>>>>> c0a128aeb558892a02210138ef7def36a76fab87
           <div className="space-y-4">
             {reviews.length === 0 && <p className="text-gray-500 text-sm">No reviews yet.</p>}
             {reviews.map((r) => (
@@ -223,6 +266,7 @@ const CourseDetails = () => {
           </div>
         </div>
       </div>
+<<<<<<< HEAD
 
       {previewLesson && (
         <div
@@ -241,6 +285,8 @@ const CourseDetails = () => {
           </div>
         </div>
       )}
+=======
+>>>>>>> c0a128aeb558892a02210138ef7def36a76fab87
     </>
   );
 };

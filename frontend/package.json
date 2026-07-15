@@ -25,7 +25,11 @@
     "autoprefixer": "^10.4.19",
     "postcss": "^8.4.39",
     "tailwindcss": "^3.4.6",
+<<<<<<< HEAD
     "vite": "^5.3.4",
     "vite-plugin-pwa": "^0.20.5"
+=======
+    "vite": "^5.3.4"
+>>>>>>> c0a128aeb558892a02210138ef7def36a76fab87
   }
 }

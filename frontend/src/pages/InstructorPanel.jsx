@@ -73,7 +73,11 @@ const InstructorPanel = () => {
                   <div>
                     <p className="font-medium">{c.title}</p>
                     <p className="text-xs text-gray-500">
+<<<<<<< HEAD
                       {c.category} &middot; ₹{c.price} &middot; {c.sections?.reduce((sum, s) => sum + s.lessons.length, 0) || 0} lessons
+=======
+                      {c.category} &middot; ${c.price} &middot; {c.sections?.reduce((sum, s) => sum + s.lessons.length, 0) || 0} lessons
+>>>>>>> c0a128aeb558892a02210138ef7def36a76fab87
                     </p>
                   </div>
                   <div className="flex items-center gap-2 text-xs">
@@ -129,7 +133,11 @@ const InstructorPanel = () => {
               <option value="advanced">Advanced</option>
             </select>
             <div className="flex gap-2">
+<<<<<<< HEAD
               <input required type="number" min="0" placeholder="Price (₹)" value={form.price} onChange={(e) => setForm({ ...form, price: Number(e.target.value) })} className="input-field" />
+=======
+              <input required type="number" min="0" placeholder="Price ($)" value={form.price} onChange={(e) => setForm({ ...form, price: Number(e.target.value) })} className="input-field" />
+>>>>>>> c0a128aeb558892a02210138ef7def36a76fab87
               <input type="number" min="0" placeholder="Discount price" value={form.discountPrice} onChange={(e) => setForm({ ...form, discountPrice: Number(e.target.value) })} className="input-field" />
             </div>
             <div>

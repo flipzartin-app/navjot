@@ -18,7 +18,11 @@ const CheckoutSuccess = () => {
     const interval = setInterval(async () => {
       attempts += 1;
       try {
+<<<<<<< HEAD
         const { data } = await api.get(`/payments/order/${orderId}`);
+=======
+        const { data } = await api.get(`/payments/order/₹{orderId}`);
+>>>>>>> c0a128aeb558892a02210138ef7def36a76fab87
         if (data.status === 'paid') {
           setStatus('paid');
           clearCart();

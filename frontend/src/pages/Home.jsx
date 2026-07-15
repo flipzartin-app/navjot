@@ -3,13 +3,19 @@ import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import api from '../services/api';
 import CourseCard from '../components/CourseCard';
+<<<<<<< HEAD
 import { useWishlist } from '../hooks/useWishlist';
+=======
+>>>>>>> c0a128aeb558892a02210138ef7def36a76fab87
 
 const Home = () => {
   const [featured, setFeatured] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
+<<<<<<< HEAD
   const { wishlistIds, toggle } = useWishlist();
+=======
+>>>>>>> c0a128aeb558892a02210138ef7def36a76fab87
 
   useEffect(() => {
     Promise.all([
@@ -69,12 +75,16 @@ const Home = () => {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {featured.map((course) => (
+<<<<<<< HEAD
               <CourseCard
                 key={course._id}
                 course={course}
                 onWishlistToggle={toggle}
                 isWishlisted={wishlistIds.has(course._id)}
               />
+=======
+              <CourseCard key={course._id} course={course} />
+>>>>>>> c0a128aeb558892a02210138ef7def36a76fab87
             ))}
           </div>
         )}

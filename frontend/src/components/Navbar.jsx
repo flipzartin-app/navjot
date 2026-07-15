@@ -72,7 +72,10 @@ const Navbar = () => {
                 <div className="absolute right-0 mt-1 w-48 card p-2 hidden group-hover:block">
                   <Link to={dashboardLink} className="block px-3 py-2 text-sm rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">Dashboard</Link>
                   <Link to="/my-courses" className="block px-3 py-2 text-sm rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">My Courses</Link>
+<<<<<<< HEAD
                   <Link to="/settings" className="block px-3 py-2 text-sm rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">Settings</Link>
+=======
+>>>>>>> c0a128aeb558892a02210138ef7def36a76fab87
                   <button onClick={logout} className="w-full text-left px-3 py-2 text-sm rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-red-500">
                     Logout
                   </button>
@@ -110,7 +113,10 @@ const Navbar = () => {
           {isAuthenticated ? (
             <>
               <Link to={dashboardLink} onClick={() => setMenuOpen(false)} className="block py-1">Dashboard</Link>
+<<<<<<< HEAD
               <Link to="/settings" onClick={() => setMenuOpen(false)} className="block py-1">Settings</Link>
+=======
+>>>>>>> c0a128aeb558892a02210138ef7def36a76fab87
               <Link to="/wishlist" onClick={() => setMenuOpen(false)} className="block py-1">Wishlist</Link>
               <button onClick={logout} className="block py-1 text-red-500">Logout</button>
             </>

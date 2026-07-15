@@ -3,12 +3,16 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
+<<<<<<< HEAD
 import GoogleSignInButton from '../components/GoogleSignInButton';
+=======
+>>>>>>> c0a128aeb558892a02210138ef7def36a76fab87
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+<<<<<<< HEAD
   const { login, googleLogin } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -29,13 +33,25 @@ const Login = () => {
     }
   };
 
+=======
+  const { login } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+>>>>>>> c0a128aeb558892a02210138ef7def36a76fab87
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
       const user = await login(email, password);
       toast.success('Welcome back!');
+<<<<<<< HEAD
       redirectAfterAuth(user);
+=======
+      const redirectTo = location.state?.from?.pathname ||
+        (user.role === 'admin' ? '/admin' : user.role === 'instructor' ? '/instructor' : '/dashboard');
+      navigate(redirectTo, { replace: true });
+>>>>>>> c0a128aeb558892a02210138ef7def36a76fab87
     } catch (err) {
       toast.error(err.response?.data?.message || 'Login failed');
     } finally {
@@ -57,14 +73,18 @@ const Login = () => {
             <div>
               <label className="text-sm font-medium block mb-1">Password</label>
               <input type="password" required value={password} onChange={(e) => setPassword(e.target.value)} className="input-field" />
+<<<<<<< HEAD
               <div className="text-right mt-1">
                 <Link to="/forgot-password" className="text-xs text-primary-600 font-medium">Forgot password?</Link>
               </div>
+=======
+>>>>>>> c0a128aeb558892a02210138ef7def36a76fab87
             </div>
             <button type="submit" disabled={loading} className="btn-primary w-full">
               {loading ? 'Logging in...' : 'Login'}
             </button>
           </form>
+<<<<<<< HEAD
 
           <div className="flex items-center gap-3 my-6">
             <div className="flex-1 h-px bg-gray-200 dark:bg-gray-800" />
@@ -74,6 +94,8 @@ const Login = () => {
 
           <GoogleSignInButton onSuccess={handleGoogleSuccess} />
 
+=======
+>>>>>>> c0a128aeb558892a02210138ef7def36a76fab87
           <p className="text-sm text-center mt-6 text-gray-500">
             Don't have an account? <Link to="/register" className="text-primary-600 font-medium">Sign up</Link>
           </p>

@@ -3,11 +3,15 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
+<<<<<<< HEAD
 import GoogleSignInButton from '../components/GoogleSignInButton';
+=======
+>>>>>>> c0a128aeb558892a02210138ef7def36a76fab87
 
 const Register = () => {
   const [form, setForm] = useState({ name: '', email: '', password: '', role: 'student' });
   const [loading, setLoading] = useState(false);
+<<<<<<< HEAD
   const { register, googleLogin } = useAuth();
   const navigate = useNavigate();
 
@@ -21,6 +25,11 @@ const Register = () => {
     }
   };
 
+=======
+  const { register } = useAuth();
+  const navigate = useNavigate();
+
+>>>>>>> c0a128aeb558892a02210138ef7def36a76fab87
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -65,6 +74,7 @@ const Register = () => {
               {loading ? 'Creating account...' : 'Sign Up'}
             </button>
           </form>
+<<<<<<< HEAD
 
           <div className="flex items-center gap-3 my-6">
             <div className="flex-1 h-px bg-gray-200 dark:bg-gray-800" />
@@ -75,6 +85,8 @@ const Register = () => {
           <GoogleSignInButton onSuccess={handleGoogleSuccess} />
           <p className="text-xs text-gray-400 text-center mt-2">Google sign-up always creates a student account.</p>
 
+=======
+>>>>>>> c0a128aeb558892a02210138ef7def36a76fab87
           <p className="text-sm text-center mt-6 text-gray-500">
             Already have an account? <Link to="/login" className="text-primary-600 font-medium">Login</Link>
           </p>
