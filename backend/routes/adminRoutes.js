@@ -4,6 +4,7 @@ const {
   getStats,
   getAllUsers,
   toggleBanUser,
+  resetUserPassword,
   getPendingCourses,
   approveCourse,
 } = require('../controllers/adminController');
@@ -16,6 +17,7 @@ router.use(protect, authorize('admin')); // every route below requires admin
 router.get('/stats', getStats);
 router.get('/users', getAllUsers);
 router.put('/users/:id/ban', toggleBanUser);
+router.put('/users/:id/reset-password', resetUserPassword);
 router.get('/courses/pending', getPendingCourses);
 router.put('/courses/:id/approve', approveCourse);
 
