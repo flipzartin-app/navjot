@@ -43,6 +43,27 @@ const toggleBanUser = asyncHandler(async (req, res) => {
   res.json({ message: `User ${user.isBanned ? 'banned' : 'unbanned'}`, user });
 });
 
+// @desc Directly set a new password for a user (works with zero email setup - admin authority only)
+// @route PUT /api/admin/users/:id/reset-password
+const resetUserPassword = asyncHandler(async (req, res) => {
+  const { newPassword } = req.body;
+  if (!newPassword || newPassword.length < 6) {
+    res.status(400);
+    throw new Error('New password must be at least 6 characters');
+  }
+
+  const user = await User.findById(req.params.id);
+  if (!user) {
+    res.status(404);
+    throw new Error('User not found');
+  }
+
+  user.password = newPassword; // pre-save hook hashes it
+  await user.save();
+
+  res.json({ message: `Password reset for ${user.email} - share the new password with them directly` });
+});
+
 // @desc List courses pending admin approval
 // @route GET /api/admin/courses/pending
 const getPendingCourses = asyncHandler(async (req, res) => {
@@ -63,4 +84,4 @@ const approveCourse = asyncHandler(async (req, res) => {
   res.json({ message: 'Course approved', course });
 });
 
-module.exports = { getStats, getAllUsers, toggleBanUser, getPendingCourses, approveCourse };
+module.exports = { getStats, getAllUsers, toggleBanUser, resetUserPassword, getPendingCourses, approveCourse };
