@@ -1,27 +1,31 @@
-const { Resend } = require('resend');
+const nodemailer = require('nodemailer');
 
-// Resend sends over HTTPS, not raw SMTP - this matters because several free-tier hosts
-// (Render included) block outbound SMTP ports to cut down on spam abuse, which raw
-// Nodemailer/SMTP would silently hang against until it times out. An HTTPS API call
-// goes through the same port (443) as any other outbound web request, so it isn't blocked.
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Generic SMTP transporter - works with Gmail (app password), SendGrid, Resend, Mailgun, etc.
+// Configure via env vars: SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, EMAIL_FROM
+const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST,
+  port: Number(process.env.SMTP_PORT) || 587,
+  secure: Number(process.env.SMTP_PORT) === 465, // true for port 465, false for 587/others
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
+  },
+});
 
 const sendEmail = async ({ to, subject, html }) => {
-  if (!process.env.RESEND_API_KEY) {
-    console.error('Email not sent: RESEND_API_KEY not configured in .env');
+  if (!process.env.SMTP_HOST || !process.env.SMTP_USER) {
+    // Fail loudly in logs rather than silently pretending an email was sent -
+    // this is the #1 thing people forget to configure.
+    console.error('Email not sent: SMTP_HOST/SMTP_USER not configured in .env');
     throw new Error('Email service is not configured on the server');
   }
 
-  // EMAIL_FROM defaults to Resend's shared test sender, which works immediately with zero
-  // domain setup - fine for development/testing. For a real product, verify your own domain
-  // in the Resend dashboard and set EMAIL_FROM to an address on it (e.g. noreply@yourdomain.com).
-  const from = process.env.EMAIL_FROM || 'EduStream <onboarding@resend.dev>';
-
-  const { error } = await resend.emails.send({ from, to, subject, html });
-  if (error) {
-    console.error('Resend API error:', error);
-    throw new Error(error.message || 'Failed to send email');
-  }
+  await transporter.sendMail({
+    from: process.env.EMAIL_FROM || process.env.SMTP_USER,
+    to,
+    subject,
+    html,
+  });
 };
 
 module.exports = sendEmail;
